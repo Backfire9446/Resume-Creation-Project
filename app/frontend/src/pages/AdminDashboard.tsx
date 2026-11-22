@@ -56,84 +56,73 @@ export default function AdminDashboard() {
     }
   };
 
+  const nActive = candidates.filter((c) => c.session_status === "active").length;
+  const nReady = candidates.filter(
+    (c) => c.session_status === "interview_complete",
+  ).length;
+  const nDone = candidates.filter(
+    (c) => c.session_status === "deliverables_generated",
+  ).length;
+  const num = "font-sans font-semibold tabular-nums";
+
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="border-b bg-white px-6 py-4 shadow-sm">
-        <div className="mx-auto flex max-w-5xl items-center justify-between">
+    <div className="min-h-screen bg-paper">
+      <header className="border-b border-rule bg-sheet px-4 py-3 sm:px-6">
+        <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-2">
           <div>
-            <h1 className="text-xl font-bold text-brand-dark">
-              Resume Chat Admin
-            </h1>
-            <p className="text-xs text-gray-500">
-              Manage candidates and sessions
-            </p>
+            <h1 className="font-serif text-xl leading-tight text-ink">Resume Chat</h1>
+            <p className="text-xs text-slate">Admin</p>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             <button
               onClick={() => setShowGenerateProfile(true)}
-              className="rounded-lg border border-brand-dark px-4 py-2 text-sm font-medium text-brand-dark hover:bg-brand-dark/5"
+              className="rounded-lg border border-rule px-3 py-2 text-sm font-medium text-ink hover:border-ink sm:px-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
             >
-              + Generate Profile
+              Generate profile
             </button>
             <button
               onClick={() => setShowCreate(true)}
-              className="rounded-lg bg-brand-dark px-4 py-2 text-sm font-medium text-white hover:bg-opacity-90"
+              className="rounded-lg bg-ink px-3 py-2 text-sm font-medium text-white hover:bg-ink/90 sm:px-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
             >
-              + New Candidate
+              New candidate
             </button>
             <button
               onClick={logout}
-              className="text-sm text-gray-500 hover:text-brand-coral"
+              className="rounded-lg px-1.5 py-1.5 text-sm text-slate hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
             >
-              Sign Out
+              Sign out
             </button>
           </div>
         </div>
       </header>
 
-      <main className="mx-auto max-w-5xl px-6 py-6">
+      <main className="mx-auto max-w-5xl px-4 py-6 sm:px-6">
         {profileBanner && (
-          <div className="mb-4 flex items-center justify-between rounded-lg border border-brand-green/40 bg-brand-green/10 px-4 py-3">
-            <p className="text-sm text-brand-dark">{profileBanner}</p>
+          <div className="mb-4 flex items-center justify-between rounded-lg border border-l-[3px] border-rule border-l-done bg-sheet px-4 py-3">
+            <p className="text-[15px] text-ink">{profileBanner}</p>
             <button
               onClick={() => setProfileBanner(null)}
-              className="ml-4 text-xs text-gray-400 hover:text-gray-600"
+              className="ml-4 rounded text-sm text-slate hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
             >
               Dismiss
             </button>
           </div>
         )}
-        {/* Stats */}
-        <div className="mb-6 grid grid-cols-3 gap-4">
-          <div className="rounded-xl bg-white p-4 shadow-sm">
-            <p className="text-2xl font-bold text-brand-dark">
-              {candidates.length}
-            </p>
-            <p className="text-xs text-gray-500">Total Candidates</p>
-          </div>
-          <div className="rounded-xl bg-white p-4 shadow-sm">
-            <p className="text-2xl font-bold text-brand-green">
-              {candidates.filter((c) => c.session_status === "active").length}
-            </p>
-            <p className="text-xs text-gray-500">Active Interviews</p>
-          </div>
-          <div className="rounded-xl bg-white p-4 shadow-sm">
-            <p className="text-2xl font-bold text-brand-gold">
-              {
-                candidates.filter(
-                  (c) => c.session_status === "deliverables_generated",
-                ).length
-              }
-            </p>
-            <p className="text-xs text-gray-500">Completed</p>
-          </div>
-        </div>
+
+        <h2 className="font-serif text-2xl text-ink">Candidates</h2>
+        <p className="mb-6 mt-1 font-serif text-[17px] text-slate">
+          <span className={`${num} text-ink`}>{candidates.length}</span>{" "}
+          {candidates.length === 1 ? "candidate" : "candidates"}:{" "}
+          <span className={`${num} text-ink`}>{nActive}</span> interviewing,{" "}
+          <span className={`${num} text-ink`}>{nReady}</span> ready for documents,{" "}
+          <span className={`${num} text-ink`}>{nDone}</span> complete.
+        </p>
 
         {/* Candidate list */}
-        <div className="rounded-xl bg-white shadow-sm">
+        <div className="rounded-xl border border-rule bg-sheet">
           {loading ? (
             <div className="flex items-center justify-center py-12">
-              <div className="h-6 w-6 animate-spin rounded-full border-4 border-brand-dark border-t-transparent" />
+              <div className="h-6 w-6 animate-spin rounded-full border-4 border-ink border-t-transparent" />
             </div>
           ) : (
             <CandidateList
@@ -174,7 +163,7 @@ export default function AdminDashboard() {
           candidateName={targetingCandidate.name}
           onDone={() => {
             setTargetingCandidate(null);
-            setProfileBanner(`Targeted resume generated for ${targetingCandidate.name}.`);
+            setProfileBanner(`Tailored resume generated for ${targetingCandidate.name}.`);
           }}
           onClose={() => setTargetingCandidate(null)}
         />

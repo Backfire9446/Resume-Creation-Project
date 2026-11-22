@@ -44,62 +44,71 @@ export default function DeliverablesPage() {
       user?.role === "admin"
         ? `${d.candidate_name} — ${d.target_role}`
         : d.target_role;
-    const key = TARGETED_TYPES.has(d.type) ? `${baseKey} → ${targetLabel(d)}` : baseKey;
+    const key = TARGETED_TYPES.has(d.type) ? `${baseKey}: tailored for ${targetLabel(d)}` : baseKey;
     if (!acc.has(key)) acc.set(key, []);
     acc.get(key)!.push(d);
     return acc;
   }, new Map());
 
+  const isAdmin = user?.role === "admin";
+
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="border-b bg-white px-6 py-4 shadow-sm">
+    <div className="min-h-screen bg-paper">
+      <header className="border-b border-rule bg-sheet px-4 py-3 sm:px-6">
         <div className="mx-auto flex max-w-3xl items-center justify-between">
-          <div>
-            <h1 className="text-xl font-bold text-brand-dark">
-              {user?.role === "admin" ? "All Deliverables" : "Your Deliverables"}
-            </h1>
-            <p className="text-xs text-gray-500">
-              Download resumes and supporting documents
-            </p>
-          </div>
+          <h1 className="font-serif text-xl text-ink">Resume Chat</h1>
           <div className="flex items-center gap-3">
             <button
-              onClick={() =>
-                navigate(user?.role === "admin" ? "/admin" : "/chat")
-              }
-              className="text-sm text-brand-dark hover:underline"
+              onClick={() => navigate(isAdmin ? "/admin" : "/chat")}
+              className="rounded-lg px-2 py-1.5 text-sm text-ink hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
             >
-              Back
+              {isAdmin ? "Back to admin" : "Back to interview"}
             </button>
             <button
               onClick={logout}
-              className="text-sm text-gray-500 hover:text-brand-coral"
+              className="rounded-lg px-1.5 py-1.5 text-sm text-slate hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
             >
-              Sign Out
+              Sign out
             </button>
           </div>
         </div>
       </header>
 
-      <main className="mx-auto max-w-3xl px-6 py-6">
+      <main className="mx-auto max-w-3xl px-4 py-8 sm:px-6">
+        <h2 className="font-serif text-2xl text-ink">
+          {isAdmin ? "All documents" : "Your documents"}
+        </h2>
+        <p className="mb-8 mt-1 text-[15px] text-slate">
+          Preview or download your resume and supporting documents.
+        </p>
+
         {loading ? (
           <div className="flex items-center justify-center py-12">
-            <div className="h-6 w-6 animate-spin rounded-full border-4 border-brand-dark border-t-transparent" />
+            <div className="h-6 w-6 animate-spin rounded-full border-4 border-ink border-t-transparent" />
           </div>
         ) : groups.size === 0 ? (
           <div className="py-12 text-center">
-            <p className="text-gray-400">
-              No deliverables yet. Complete the interview first.
+            <p className="font-serif text-2xl text-ink">No documents yet</p>
+            <p className="mb-5 mt-2 text-[15px] text-slate">
+              They appear here once your interview is complete.
             </p>
+            {!isAdmin && (
+              <button
+                onClick={() => navigate("/chat")}
+                className="rounded-lg bg-ink px-4 py-2 text-sm font-medium text-white hover:bg-ink/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
+              >
+                Back to interview
+              </button>
+            )}
           </div>
         ) : (
           <div className="space-y-8">
             {Array.from(groups.entries()).map(([groupKey, items]) => (
               <section key={groupKey}>
-                <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-gray-500">
+                <h3 className="mb-3 font-serif text-[1.15rem] text-ink">
                   {groupKey}
-                </h2>
-                <div className="grid gap-3">
+                </h3>
+                <div className="divide-y divide-rule rounded-xl border border-rule bg-sheet">
                   {items.map((d) => (
                     <DeliverableCard
                       key={d.id}

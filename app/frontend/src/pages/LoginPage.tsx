@@ -22,59 +22,71 @@ export default function LoginPage() {
       await login(username, password);
       // Auth context will update, App will redirect
     } catch {
-      setError("Invalid username or password");
+      setError(
+        "That username and password don't match. Check them and try again.",
+      );
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-brand-dark to-brand-mid">
-      <div className="w-full max-w-sm rounded-xl bg-white p-8 shadow-2xl">
-        <h1 className="mb-1 text-2xl font-bold text-brand-dark">
-          Resume Chat
-        </h1>
-        <p className="mb-6 text-sm text-gray-500">
-          Sign in to start your interview
+    <div className="flex min-h-screen items-center justify-center bg-paper p-4">
+      <div className="w-full max-w-sm rounded-xl border border-rule bg-sheet p-8">
+        <h1 className="mb-1 font-serif text-2xl text-ink">Resume Chat</h1>
+        <p className="mb-6 text-[15px] text-slate">
+          Sign in to continue your resume interview.
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="username"
+              className="mb-1 block text-sm font-medium text-ink"
+            >
               Username
             </label>
             <input
+              id="username"
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-brand-dark focus:outline-none focus:ring-1 focus:ring-brand-dark"
+              autoComplete="username"
+              className="w-full rounded-lg border border-rule bg-sheet px-3 py-2 text-[15px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
               required
               autoFocus
             />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="password"
+              className="mb-1 block text-sm font-medium text-ink"
+            >
               Password
             </label>
             <input
+              id="password"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-brand-dark focus:outline-none focus:ring-1 focus:ring-brand-dark"
+              autoComplete="current-password"
+              className="w-full rounded-lg border border-rule bg-sheet px-3 py-2 text-[15px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
               required
             />
           </div>
 
           {error && (
-            <p className="text-sm text-brand-coral">{error}</p>
+            <p role="alert" className="text-sm text-danger">
+              {error}
+            </p>
           )}
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-lg bg-brand-dark px-4 py-2.5 font-medium text-white transition hover:bg-opacity-90 disabled:opacity-50"
+            className="w-full rounded-lg bg-ink px-4 py-2.5 font-medium text-white transition hover:bg-ink/90 disabled:opacity-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
           >
-            {loading ? "Signing in..." : "Sign In"}
+            {loading ? "Signing in…" : "Sign in"}
           </button>
         </form>
       </div>

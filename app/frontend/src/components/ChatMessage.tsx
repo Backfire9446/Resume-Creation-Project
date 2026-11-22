@@ -4,9 +4,15 @@ interface Props {
   role: "user" | "assistant";
   content: string;
   timestamp: string;
+  isNew?: boolean;
 }
 
-export default function ChatMessage({ role, content, timestamp }: Props) {
+export default function ChatMessage({
+  role,
+  content,
+  timestamp,
+  isNew = false,
+}: Props) {
   const isUser = role === "user";
   const time = new Date(timestamp).toLocaleTimeString([], {
     hour: "2-digit",
@@ -14,23 +20,26 @@ export default function ChatMessage({ role, content, timestamp }: Props) {
   });
 
   return (
-    <div className={`flex ${isUser ? "justify-end" : "justify-start"} mb-3`}>
-      <div
-        className={`max-w-[80%] rounded-2xl px-4 py-3 ${
-          isUser
-            ? "rounded-br-md bg-brand-dark text-white"
-            : "rounded-bl-md bg-white text-gray-800 shadow-sm border border-gray-100"
-        }`}
-      >
-        <div className={`prose prose-sm max-w-none ${isUser ? "prose-invert" : ""}`}>
-          <ReactMarkdown>{content}</ReactMarkdown>
+    <div className="mx-auto mb-7 max-w-[68ch]">
+      {isUser ? (
+        <div className="ml-8 sm:ml-16">
+          <div className="rounded-lg border border-l-[3px] border-rule border-l-ink bg-sheet px-4 py-3 font-sans text-[15px] leading-relaxed">
+            <div className="md">
+              <ReactMarkdown>{content}</ReactMarkdown>
+            </div>
+          </div>
+          <p className="mt-1.5 text-right text-xs text-slate">{time}</p>
         </div>
-        <p
-          className={`mt-1 text-[10px] ${isUser ? "text-white/60" : "text-gray-400"}`}
-        >
-          {time}
-        </p>
-      </div>
+      ) : (
+        <div>
+          <div className="font-serif text-[17px] leading-relaxed text-ink">
+            <div className={`md md-voice${isNew ? " is-new" : ""}`}>
+              <ReactMarkdown>{content}</ReactMarkdown>
+            </div>
+          </div>
+          <p className="mt-1.5 text-xs text-slate">{time}</p>
+        </div>
+      )}
     </div>
   );
 }

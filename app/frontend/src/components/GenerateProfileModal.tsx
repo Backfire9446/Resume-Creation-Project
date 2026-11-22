@@ -41,20 +41,20 @@ export default function GenerateProfileModal({ onCreated, onClose }: Props) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <div className="w-full max-w-lg rounded-2xl bg-white p-6 shadow-2xl">
-        <h2 className="mb-1 text-lg font-bold text-brand-dark">
-          Generate New Profile
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-ink/40 backdrop-blur-[2px] p-4">
+      <div className="w-full max-w-lg rounded-xl bg-sheet p-6 shadow-[0_12px_40px_-12px_rgba(30,42,71,0.35)]">
+        <h2 className="mb-1 font-serif text-xl text-ink">
+          Generate profile
         </h2>
-        <p className="mb-5 text-sm text-gray-500">
+        <p className="mb-5 text-[15px] text-slate">
           Claude will search for current job postings and build a skills profile
           for the target role. This takes 30–60 seconds.
         </p>
 
         <div className="space-y-4">
           <div>
-            <label className="mb-1 block text-xs font-medium text-gray-700">
-              Target Role <span className="text-brand-coral">*</span>
+            <label className="mb-1 block text-sm font-medium text-ink">
+              Target role <span className="text-danger">*</span>
             </label>
             <input
               type="text"
@@ -62,14 +62,14 @@ export default function GenerateProfileModal({ onCreated, onClose }: Props) {
               onChange={(e) => setRoleName(e.target.value)}
               placeholder="e.g. Senior Software Engineer"
               disabled={generating}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-dark focus:outline-none focus:ring-1 focus:ring-brand-dark disabled:bg-gray-50"
+              className="w-full rounded-lg border border-rule bg-sheet px-3 py-2 text-[15px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink disabled:bg-paper"
             />
           </div>
 
           <div>
-            <label className="mb-1 block text-xs font-medium text-gray-700">
+            <label className="mb-1 block text-sm font-medium text-ink">
               Industry{" "}
-              <span className="font-normal text-gray-400">(optional)</span>
+              <span className="font-normal text-slate">(optional)</span>
             </label>
             <input
               type="text"
@@ -77,14 +77,14 @@ export default function GenerateProfileModal({ onCreated, onClose }: Props) {
               onChange={(e) => setIndustry(e.target.value)}
               placeholder="e.g. SaaS / B2B Technology"
               disabled={generating}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-dark focus:outline-none focus:ring-1 focus:ring-brand-dark disabled:bg-gray-50"
+              className="w-full rounded-lg border border-rule bg-sheet px-3 py-2 text-[15px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink disabled:bg-paper"
             />
           </div>
 
           <div>
-            <label className="mb-1 block text-xs font-medium text-gray-700">
+            <label className="mb-1 block text-sm font-medium text-ink">
               Must-have tools / certs{" "}
-              <span className="font-normal text-gray-400">(optional)</span>
+              <span className="font-normal text-slate">(optional)</span>
             </label>
             <input
               type="text"
@@ -92,38 +92,38 @@ export default function GenerateProfileModal({ onCreated, onClose }: Props) {
               onChange={(e) => setTools(e.target.value)}
               placeholder="e.g. React, TypeScript, AWS"
               disabled={generating}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-dark focus:outline-none focus:ring-1 focus:ring-brand-dark disabled:bg-gray-50"
+              className="w-full rounded-lg border border-rule bg-sheet px-3 py-2 text-[15px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink disabled:bg-paper"
             />
           </div>
         </div>
 
         {generating && (
-          <div className="mt-5 flex items-center gap-3 rounded-lg bg-gray-50 px-4 py-3">
-            <div className="h-4 w-4 animate-spin rounded-full border-2 border-brand-dark border-t-transparent" />
-            <p className="text-sm text-gray-600">
+          <div className="mt-5 flex items-center gap-3 rounded-lg bg-paper px-4 py-3">
+            <div className="h-4 w-4 animate-spin rounded-full border-2 border-ink border-t-transparent" />
+            <p className="text-sm text-slate">
               Searching job postings and building profile…
             </p>
           </div>
         )}
 
         {error && (
-          <p className="mt-4 text-sm text-red-500">{error}</p>
+          <p className="mt-4 text-sm text-danger">{error}</p>
         )}
 
         <div className="mt-6 flex items-center justify-end gap-3">
           <button
             onClick={onClose}
             disabled={generating}
-            className="rounded-lg px-4 py-2 text-sm text-gray-500 hover:text-gray-700 disabled:opacity-40"
+            className="rounded-lg px-4 py-2 text-sm text-slate hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink disabled:opacity-40"
           >
             Cancel
           </button>
           <button
             onClick={handleGenerate}
             disabled={!roleName.trim() || generating}
-            className="rounded-lg bg-brand-dark px-4 py-2 text-sm font-medium text-white hover:bg-opacity-90 disabled:opacity-40"
+            className="rounded-lg bg-ink px-4 py-2 text-sm font-medium text-white hover:bg-ink/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink disabled:opacity-40"
           >
-            {generating ? "Generating…" : "Generate Profile"}
+            {generating ? "Generating…" : "Generate profile"}
           </button>
         </div>
       </div>
