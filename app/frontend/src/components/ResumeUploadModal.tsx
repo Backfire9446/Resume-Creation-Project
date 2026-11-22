@@ -39,18 +39,27 @@ export default function ResumeUploadModal({ onDone }: Props) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <div className="w-full max-w-lg rounded-2xl bg-white p-6 shadow-2xl">
-        <h2 className="mb-1 text-lg font-bold text-brand-dark">
-          Upload Your Current Resume
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-ink/40 backdrop-blur-[2px] p-4">
+      <div className="w-full max-w-lg rounded-xl bg-sheet p-6 shadow-[0_12px_40px_-12px_rgba(30,42,71,0.35)]">
+        <p className="mb-1 text-xs text-slate">Step 1 of 3</p>
+        <h2 className="mb-1 font-serif text-xl text-ink">
+          Upload your current resume
         </h2>
-        <p className="mb-5 text-sm text-gray-500">
+        <p className="mb-5 text-[15px] text-slate">
           Have an existing resume? Upload it and the interview will build on
           what you already have. Supports PDF, DOCX, and TXT.
         </p>
 
         <div
-          className="flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 px-6 py-10 text-center hover:border-brand-dark"
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              fileRef.current?.click();
+            }
+          }}
+          className="flex cursor-pointer flex-col items-center justify-center rounded-lg border-[1.5px] border-dashed border-rule px-6 py-10 text-center hover:border-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
           onClick={() => fileRef.current?.click()}
         >
           <input
@@ -61,34 +70,34 @@ export default function ResumeUploadModal({ onDone }: Props) {
             onChange={handleFile}
           />
           {file ? (
-            <p className="text-sm font-medium text-brand-dark">{file.name}</p>
+            <p className="text-[15px] font-semibold text-ink">{file.name}</p>
           ) : (
             <>
-              <p className="text-sm font-medium text-gray-600">
+              <p className="text-[15px] font-medium text-ink">
                 Click to choose a file
               </p>
-              <p className="mt-1 text-xs text-gray-400">PDF, DOCX, or TXT</p>
+              <p className="mt-1 text-xs text-slate">PDF, DOCX, or TXT</p>
             </>
           )}
         </div>
 
         {error && (
-          <p className="mt-3 text-sm text-red-500">{error}</p>
+          <p className="mt-3 text-sm text-danger">{error}</p>
         )}
 
         <div className="mt-5 flex items-center justify-end gap-3">
           <button
             onClick={() => onDone(false)}
-            className="rounded-lg px-4 py-2 text-sm text-gray-500 hover:text-gray-700"
+            className="rounded-lg px-4 py-2 text-sm text-slate hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
           >
             Skip for now
           </button>
           <button
             onClick={handleUpload}
             disabled={!file || uploading}
-            className="rounded-lg bg-brand-dark px-4 py-2 text-sm font-medium text-white hover:bg-opacity-90 disabled:opacity-40"
+            className="rounded-lg bg-ink px-4 py-2 text-sm font-medium text-white hover:bg-ink/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink disabled:opacity-40"
           >
-            {uploading ? "Uploading…" : "Upload Resume"}
+            {uploading ? "Uploading…" : "Upload resume"}
           </button>
         </div>
       </div>
