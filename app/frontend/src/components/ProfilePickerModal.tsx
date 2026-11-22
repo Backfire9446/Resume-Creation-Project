@@ -76,8 +76,8 @@ export default function ProfilePickerModal({ onSelect, onSkip }: Props) {
                   aria-pressed={selected === p.slug}
                   className={`w-full border-l-[3px] px-4 py-3 text-left transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink ${
                     selected === p.slug
-                      ? "border-l-ink bg-paper"
-                      : "border-l-transparent hover:bg-paper"
+                      ? "!border-l-ink bg-paper"
+                      : "!border-l-transparent hover:bg-paper"
                   }`}
                 >
                   <p className="font-serif text-[17px] text-ink">{p.name}</p>
