@@ -2,6 +2,55 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  font-family: "Inter", system-ui, sans-serif;
+@layer components {
+  .md > * + * { margin-top: 0.75em; }
+  .md > :first-child { margin-top: 0; }
+  .md > :last-child { margin-bottom: 0; }
+  .md ul { list-style: disc; padding-left: 1.25em; }
+  .md ol { list-style: decimal; padding-left: 1.25em; }
+  .md li + li { margin-top: 0.35em; }
+  .md li > ul, .md li > ol { margin-top: 0.35em; }
+  .md h1 { font-family: theme(fontFamily.serif); font-size: 1.6rem; font-weight: 600; line-height: 1.25; }
+  .md h2 {
+    font-family: theme(fontFamily.serif);
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin-top: 1.4em;
+    padding-bottom: 0.25em;
+    border-bottom: 1px solid theme(colors.rule);
+  }
+  .md h3 { font-size: 1rem; font-weight: 600; }
+  .md a { text-decoration: underline; color: theme(colors.ink); }
+  .md code {
+    font-size: 0.875em;
+    background: #EEF1F5;
+    color: theme(colors.slate);
+    padding: 0.1em 0.3em;
+    border-radius: 4px;
+  }
+  .md-voice strong {
+    font-weight: 600;
+    background-image: linear-gradient(
+      transparent 55%,
+      theme(colors.hl) 55%,
+      theme(colors.hl) 92%,
+      transparent 92%
+    );
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    padding: 0 0.1em;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+  }
+}
+
+@keyframes hl-sweep {
+  from { background-size: 0% 100%; }
+  to { background-size: 100% 100%; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .md-voice.is-new strong {
+    animation: hl-sweep 600ms ease-out 250ms backwards;
+  }
 }
