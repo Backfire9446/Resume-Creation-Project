@@ -38,6 +38,7 @@ export default function CandidateChat() {
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [showJdModal, setShowJdModal] = useState(false);
   const [showJdView, setShowJdView] = useState(false);
+  const [newMsgId, setNewMsgId] = useState<string | null>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
 
   const isComplete = COMPLETE_STATUSES.includes(status?.status ?? "");
@@ -113,6 +114,7 @@ export default function CandidateChat() {
         },
         res.data,
       ]);
+      setNewMsgId(res.data.id);
       const statusRes = await api.get("/chat/status");
       setStatus(statusRes.data);
     } catch {
@@ -170,6 +172,7 @@ export default function CandidateChat() {
     try {
       const res = await api.post("/chat/send", { content });
       setMessages((prev) => [...prev, res.data]);
+      setNewMsgId(res.data.id);
       const statusRes = await api.get("/chat/status");
       setStatus(statusRes.data);
     } catch {
@@ -192,13 +195,13 @@ export default function CandidateChat() {
   if (initializing) {
     return (
       <div className="flex h-screen items-center justify-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-brand-dark border-t-transparent" />
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-ink border-t-transparent" />
       </div>
     );
   }
 
   return (
-    <div className="flex h-screen flex-col bg-gray-50">
+    <div className="flex h-screen flex-col bg-paper">
       {/* Resume Upload Modal — shown first for new sessions */}
       {showResumeModal && (
         <ResumeUploadModal onDone={handleResumeDone} />
@@ -218,32 +221,31 @@ export default function CandidateChat() {
           initialValue={status?.job_description ?? ""}
           onSave={isNewSession ? handleJdSave : handleJdUpdate}
           onSkip={isNewSession ? handleJdSkip : () => setShowJdModal(false)}
-          saveLabel={isNewSession ? "Save & Start Interview" : "Save"}
+          saveLabel={isNewSession ? "Save and start interview" : "Save"}
+          stepLabel={isNewSession ? "Step 3 of 3" : undefined}
         />
       )}
 
       {/* JD View panel */}
       {showJdView && status?.job_description && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-ink/40 p-4 backdrop-blur-[2px]"
           onClick={() => setShowJdView(false)}
         >
           <div
-            className="relative flex max-h-[80vh] w-full max-w-2xl flex-col rounded-2xl bg-white shadow-2xl"
+            className="relative flex max-h-[80vh] w-full max-w-2xl flex-col rounded-xl bg-sheet shadow-[0_12px_40px_-12px_rgba(30,42,71,0.35)]"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center justify-between border-b px-6 py-4">
-              <h2 className="text-sm font-semibold text-brand-dark">
-                Target Job Description
-              </h2>
+            <div className="flex items-center justify-between border-b border-rule px-6 py-4">
+              <h2 className="font-serif text-xl text-ink">Job posting</h2>
               <button
                 onClick={() => setShowJdView(false)}
-                className="rounded-lg px-3 py-1 text-sm text-gray-500 hover:bg-gray-100"
+                className="rounded-lg px-3 py-1 text-sm text-slate hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
               >
                 Close
               </button>
             </div>
-            <div className="flex-1 overflow-y-auto whitespace-pre-wrap px-6 py-4 text-sm text-gray-700">
+            <div className="flex-1 overflow-y-auto whitespace-pre-wrap px-6 py-4 text-[15px] text-slate">
               {status.job_description}
             </div>
           </div>
@@ -251,50 +253,42 @@ export default function CandidateChat() {
       )}
 
       {/* Header */}
-      <header className="flex items-center justify-between border-b bg-white px-4 py-3 shadow-sm">
+      <header className="flex items-center justify-between border-b border-rule bg-sheet px-4 py-3">
         <div>
-          <h1 className="text-lg font-semibold text-brand-dark">Resume Chat</h1>
-          <p className="text-xs text-gray-500">Welcome, {user?.name}</p>
+          <h1 className="font-serif text-xl leading-tight text-ink">Resume Chat</h1>
+          <p className="hidden text-xs text-slate sm:block">{user?.name}</p>
         </div>
-        <div className="flex items-center gap-3">
-          {/* JD buttons: View (completed), Add/Edit (active) */}
+        <div className="flex items-center gap-2 sm:gap-3">
+          {/* Job posting buttons: View (completed), Add/Edit (active) */}
           {status?.job_description && isComplete && (
             <button
               onClick={() => setShowJdView(true)}
-              className="rounded-lg border border-gray-300 px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-50"
+              className="rounded-lg px-2.5 py-1.5 text-sm font-medium sm:px-3 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink border border-rule text-ink hover:border-ink"
             >
-              View JD
+              View job posting
             </button>
           )}
           {!isNewSession && !isComplete && (
             <button
-              onClick={
-                status?.job_description
-                  ? () => setShowJdModal(true)
-                  : () => setShowJdModal(true)
-              }
-              className={
-                status?.job_description
-                  ? "rounded-lg border border-gray-300 px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-50"
-                  : "rounded-lg border border-dashed border-gray-400 px-3 py-1.5 text-xs font-medium text-gray-500 hover:border-brand-dark hover:text-brand-dark"
-              }
+              onClick={() => setShowJdModal(true)}
+              className="rounded-lg px-2.5 py-1.5 text-sm font-medium sm:px-3 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink border border-rule text-ink hover:border-ink"
             >
-              {status?.job_description ? "View / Edit JD" : "+ Add JD"}
+              {status?.job_description ? "Edit job posting" : "Add job posting"}
             </button>
           )}
           {isComplete && (
             <button
               onClick={() => navigate("/deliverables")}
-              className="rounded-lg bg-brand-green px-3 py-1.5 text-xs font-medium text-white"
+              className="rounded-lg px-2.5 py-1.5 text-sm font-medium sm:px-3 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink bg-ink text-white hover:bg-ink/90"
             >
-              View Deliverables
+              Your documents
             </button>
           )}
           <button
             onClick={logout}
-            className="text-sm text-gray-500 hover:text-brand-coral"
+            className="rounded-lg px-1.5 py-1.5 text-sm text-slate hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
           >
-            Sign Out
+            Sign out
           </button>
         </div>
       </header>
@@ -303,27 +297,27 @@ export default function CandidateChat() {
       <PhaseIndicator currentPhase={status?.phase ?? 0} />
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto px-4 py-4">
+      <div className="flex-1 overflow-y-auto px-4 py-6">
         {messages.length === 0 && isComplete ? (
           <div className="flex flex-col items-center justify-center py-16 text-center">
-            <p className="mb-2 text-lg font-semibold text-brand-dark">
-              Your interview is complete!
+            <p className="mb-2 font-serif text-2xl text-ink">
+              Your interview is complete
             </p>
-            <p className="mb-4 text-sm text-gray-500">
-              Your resume and documents are ready for download.
+            <p className="mb-5 text-[15px] text-slate">
+              Your resume and supporting documents are ready.
             </p>
             <div className="flex items-center gap-3">
               <button
                 onClick={() => navigate("/deliverables")}
-                className="rounded-lg bg-brand-green px-4 py-2 text-sm font-medium text-white"
+                className="rounded-lg bg-ink px-4 py-2 text-sm font-medium text-white hover:bg-ink/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
               >
-                View Deliverables
+                Your documents
               </button>
               <button
                 onClick={handleNewSession}
-                className="rounded-lg border border-brand-dark px-4 py-2 text-sm font-medium text-brand-dark hover:bg-brand-dark/5"
+                className="rounded-lg border border-rule px-4 py-2 text-sm font-medium text-ink hover:border-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
               >
-                Start New Interview
+                Start a new interview
               </button>
             </div>
           </div>
@@ -335,18 +329,15 @@ export default function CandidateChat() {
                 role={msg.role}
                 content={msg.content}
                 timestamp={msg.created_at}
+                isNew={msg.id === newMsgId}
               />
             ))}
 
             {sending && (
-              <div className="mb-3 flex justify-start">
-                <div className="rounded-2xl rounded-bl-md border border-gray-100 bg-white px-4 py-3 shadow-sm">
-                  <div className="flex gap-1">
-                    <span className="h-2 w-2 animate-bounce rounded-full bg-gray-400" />
-                    <span className="h-2 w-2 animate-bounce rounded-full bg-gray-400 [animation-delay:0.1s]" />
-                    <span className="h-2 w-2 animate-bounce rounded-full bg-gray-400 [animation-delay:0.2s]" />
-                  </div>
-                </div>
+              <div className="mx-auto mb-7 max-w-[68ch]">
+                <p className="animate-pulse font-serif text-[17px] italic text-slate">
+                  Your interviewer is writing…
+                </p>
               </div>
             )}
           </>
