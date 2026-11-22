@@ -79,7 +79,7 @@ export default function DeliverableCard({
       <div className="flex flex-wrap items-center gap-x-4 gap-y-3 px-4 py-4">
         <div className="min-w-0 flex-1">
           <p className="font-medium text-ink">{TYPE_LABELS[type] ?? type}</p>
-          <p className="flex gap-3 text-[13px] text-slate">
+          <p className="flex gap-3 whitespace-nowrap text-[13px] text-slate">
             <span>{formatTag(type)}</span>
             <span className="text-slate/80">
               {new Date(created_at).toLocaleDateString()}
