@@ -1,7 +1,7 @@
 import io
 
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
-from sqlalchemy import select
+from sqlalchemy import select, text
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.auth import require_candidate
@@ -23,18 +23,37 @@ from app.schemas import (
 router = APIRouter()
 
 
-async def get_or_create_session(user: User, db: AsyncSession) -> Session:
+async def _latest_session(user: User, db: AsyncSession) -> Session | None:
+    # A candidate can have several non-abandoned sessions (completed ones are
+    # kept when a new interview starts), so take the newest, not "exactly one".
     result = await db.execute(
         select(Session)
         .where(Session.user_id == user.id, Session.status != "abandoned")
         .order_by(Session.created_at.desc())
+        .limit(1)
     )
-    session = result.scalar_one_or_none()
+    return result.scalars().first()
+
+
+async def get_or_create_session(user: User, db: AsyncSession) -> Session:
+    session = await _latest_session(user, db)
+    if session:
+        return session
+
+    # The chat page loads the session and messages in parallel on first visit, so
+    # two requests can both find nothing. Serialize creation per user with a
+    # transaction-scoped advisory lock, then re-check before inserting. Only the
+    # create path takes the lock, so normal reads never wait on it.
+    await db.execute(
+        text("SELECT pg_advisory_xact_lock(hashtext(:key))"),
+        {"key": f"session:{user.id}"},
+    )
+    session = await _latest_session(user, db)
     if not session:
         session = Session(user_id=user.id)
         db.add(session)
-        await db.commit()
-        await db.refresh(session)
+    await db.commit()  # releases the lock
+    await db.refresh(session)
     return session
 
 
