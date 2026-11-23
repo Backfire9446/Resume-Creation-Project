@@ -4,6 +4,7 @@ import subprocess
 
 import anthropic
 
+from app.claude_client import response_text, stream_message
 from app.config import settings
 from app.discovery_writer import read_discovery_md, write_discovery_md
 from app.models import Deliverable, Message, Session
@@ -11,8 +12,8 @@ from app.prompts import _load_system_files
 
 client = anthropic.Anthropic(api_key=settings.ANTHROPIC_API_KEY)
 
-MODEL = "claude-sonnet-4-20250514"
-MAX_TOKENS = 8192
+# Thinking counts toward max_tokens; documents run several thousand tokens.
+MAX_TOKENS = 32000
 
 
 async def generate_all_deliverables(session: Session, db) -> None:
@@ -183,13 +184,15 @@ async def generate_targeted_deliverables(
 
 
 async def _generate_with_claude(system: str, user_content: str) -> str:
-    response = client.messages.create(
-        model=MODEL,
+    # Streamed: long document generations can exceed non-streaming HTTP timeouts.
+    response = stream_message(
+        client,
+        effort="high",
         max_tokens=MAX_TOKENS,
         system=system,
         messages=[{"role": "user", "content": user_content}],
     )
-    return response.content[0].text
+    return response_text(response)
 
 
 async def _save_deliverable(

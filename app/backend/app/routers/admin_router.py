@@ -8,6 +8,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
 from app.auth import hash_password, require_admin
+from app.claude_client import ClaudeRefusal, response_text, stream_message
 from app.config import settings
 from app.database import get_db
 from app.models import Session, User
@@ -15,7 +16,6 @@ from app.prompts import get_profile_metadata, reload_system_files
 from app.schemas import CandidateCreate, CandidateListItem, ProfileGenerateRequest, ProfileItem
 
 _claude = anthropic.Anthropic(api_key=settings.ANTHROPIC_API_KEY)
-_GENERATE_MODEL = "claude-sonnet-4-20250514"
 
 router = APIRouter()
 
@@ -166,25 +166,25 @@ async def generate_profile(
     MAX_ITERATIONS = 8
     profile_text = ""
     for _ in range(MAX_ITERATIONS):
-        response = _claude.messages.create(
-            model=_GENERATE_MODEL,
-            max_tokens=8192,
-            system=system_prompt,
-            tools=[{"type": "web_search_20250305", "name": "web_search"}],
-            messages=messages,
-        )
+        try:
+            response = stream_message(
+                _claude,
+                effort="high",
+                max_tokens=32000,
+                system=system_prompt,
+                tools=[{"type": "web_search_20260209", "name": "web_search"}],
+                messages=messages,
+            )
+            text = response_text(response)
+        except ClaudeRefusal:
+            raise HTTPException(status_code=422, detail="Claude declined to generate this profile.")
 
-        if response.stop_reason == "end_turn":
-            # Extract text blocks
-            for block in response.content:
-                if hasattr(block, "text"):
-                    profile_text += block.text
-            break
-        elif response.stop_reason == "tool_use":
-            # Append assistant turn and loop — web_search is server-side
+        if response.stop_reason == "pause_turn":
+            # Server-side web search paused mid-turn: send the turn back to resume it.
             messages.append({"role": "assistant", "content": response.content})
-        else:
-            break
+            continue
+        profile_text = text
+        break
 
     # Strip anything before the profile header
     marker = "# Profile:"
