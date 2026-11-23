@@ -1,13 +1,15 @@
 import anthropic
 
+from app.claude_client import create_message, response_text
 from app.config import settings
 from app.models import Message, Session
 from app.prompts import build_system_prompt, extract_meta, parse_session_updates
 
 client = anthropic.Anthropic(api_key=settings.ANTHROPIC_API_KEY)
 
-MODEL = "claude-sonnet-4-20250514"
-MAX_TOKENS = 4096
+# Thinking is always on and counts toward max_tokens; replies are short, so this
+# leaves ample headroom.
+MAX_TOKENS = 16000
 
 
 async def chat_with_claude(
@@ -35,14 +37,15 @@ async def chat_with_claude(
             }
         )
 
-    response = client.messages.create(
-        model=MODEL,
+    response = create_message(
+        client,
+        effort="medium",
         max_tokens=MAX_TOKENS,
         system=system_prompt,
         messages=api_messages,
     )
 
-    raw_text = response.content[0].text
+    raw_text = response_text(response)
 
     # Extract META block and parse session updates
     clean_text, meta = extract_meta(raw_text)
