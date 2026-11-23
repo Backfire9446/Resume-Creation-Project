@@ -21,6 +21,7 @@ from app.models import Session
 # Map discovery_data keys to human-readable labels
 _KEY_LABELS: dict[str, str] = {
     "candidate_name": "Candidate Name",
+    "contact": "Contact Details",
     "target_role": "Target Role",
     "alternate_roles": "Alternate Roles",
     "career_narrative": "Career Narrative",
