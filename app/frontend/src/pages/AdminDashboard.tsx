@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import api from "../api";
 import { useAuth } from "../auth-context";
 import CandidateList from "../components/CandidateList";
@@ -19,6 +20,7 @@ interface Candidate {
 
 export default function AdminDashboard() {
   const { logout } = useAuth();
+  const navigate = useNavigate();
   const [candidates, setCandidates] = useState<Candidate[]>([]);
   const [showCreate, setShowCreate] = useState(false);
   const [showGenerateProfile, setShowGenerateProfile] = useState(false);
@@ -73,7 +75,13 @@ export default function AdminDashboard() {
             <h1 className="font-serif text-xl leading-tight text-ink">Resume Chat</h1>
             <p className="text-xs text-slate">Admin</p>
           </div>
-          <div className="flex items-center gap-2 sm:gap-3">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+            <button
+              onClick={() => navigate("/deliverables")}
+              className="rounded-lg border border-rule px-3 py-2 text-sm font-medium text-ink hover:border-ink sm:px-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
+            >
+              All documents
+            </button>
             <button
               onClick={() => setShowGenerateProfile(true)}
               className="rounded-lg border border-rule px-3 py-2 text-sm font-medium text-ink hover:border-ink sm:px-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
@@ -98,8 +106,8 @@ export default function AdminDashboard() {
 
       <main className="mx-auto max-w-5xl px-4 py-6 sm:px-6">
         {profileBanner && (
-          <div className="mb-4 flex items-center justify-between rounded-lg border border-l-[3px] border-rule border-l-done bg-sheet px-4 py-3">
-            <p className="text-[15px] text-ink">{profileBanner}</p>
+          <div className="mb-4 flex items-center justify-between gap-2 rounded-lg border border-l-[3px] border-rule border-l-done bg-sheet px-4 py-3">
+            <p className="min-w-0 break-words text-[15px] text-ink">{profileBanner}</p>
             <button
               onClick={() => setProfileBanner(null)}
               className="ml-4 rounded text-sm text-slate hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"

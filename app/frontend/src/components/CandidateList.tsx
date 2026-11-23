@@ -1,3 +1,5 @@
+import { useNavigate } from "react-router-dom";
+
 interface Candidate {
   id: string;
   name: string;
@@ -44,6 +46,7 @@ export default function CandidateList({
   onGenerateDeliverables,
   onTarget,
 }: Props) {
+  const navigate = useNavigate();
   if (candidates.length === 0) {
     return (
       <p className="py-8 text-center text-slate">
@@ -52,10 +55,17 @@ export default function CandidateList({
     );
   }
 
-  const phaseOf = (c: Candidate) =>
-    c.session_phase != null
-      ? PHASE_NAMES[c.session_phase] ?? `Phase ${c.session_phase}`
-      : "-";
+  const phaseOf = (c: Candidate) => {
+    if (!c.session_status) return "Not started";
+    if (
+      c.session_status === "deliverables_generated" ||
+      (c.session_phase != null && c.session_phase >= PHASE_NAMES.length)
+    )
+      return "Done";
+    return c.session_phase != null
+      ? PHASE_NAMES[c.session_phase] ?? "Done"
+      : "Not started";
+  };
 
   const actions = (c: Candidate) => (
     <>
@@ -65,6 +75,14 @@ export default function CandidateList({
           className={`rounded-lg bg-ink px-3 py-1.5 text-sm font-medium text-white hover:bg-ink/90 ${FOCUS}`}
         >
           Generate documents
+        </button>
+      )}
+      {c.session_status === "deliverables_generated" && c.session_id && (
+        <button
+          onClick={() => navigate("/deliverables")}
+          className={`rounded-lg border border-rule px-3 py-1.5 text-sm font-medium text-ink hover:border-ink ${FOCUS}`}
+        >
+          Documents
         </button>
       )}
       {c.session_status === "deliverables_generated" && c.session_id && (
@@ -90,9 +108,9 @@ export default function CandidateList({
       {/* Mobile: stacked rows */}
       <ul className="divide-y divide-rule sm:hidden">
         {candidates.map((c) => (
-          <li key={c.id} className="px-4 py-4">
-            <p className="font-semibold text-ink">{c.name}</p>
-            <p className="text-sm text-slate">{c.username}</p>
+          <li key={c.id} className="min-w-0 px-4 py-4">
+            <p className="break-words font-semibold text-ink">{c.name}</p>
+            <p className="break-all text-sm text-slate">{c.username}</p>
             <div className="mt-2 text-[15px]">
               <StatusLabel status={c.session_status} />
               {c.completed_sets > 1 && (
@@ -101,7 +119,9 @@ export default function CandidateList({
                 </p>
               )}
             </div>
-            <p className="mt-1 text-sm text-slate">Phase: {phaseOf(c)}</p>
+            {c.session_status && (
+              <p className="mt-1 text-sm text-slate">Phase: {phaseOf(c)}</p>
+            )}
             <div className="mt-3 flex flex-wrap items-center gap-2">
               {actions(c)}
             </div>
@@ -154,7 +174,13 @@ export default function CandidateList({
 }
 
 function StatusLabel({ status }: { status: string | null }) {
-  if (!status) return <span className="text-slate">-</span>;
+  if (!status)
+    return (
+      <span className="inline-flex items-center gap-2 text-slate">
+        <span className="h-2 w-2 rounded-full bg-slate" aria-hidden="true" />
+        Not started
+      </span>
+    );
   const s = STATUS[status] ?? {
     label: status.replace(/_/g, " "),
     dot: "bg-slate",
