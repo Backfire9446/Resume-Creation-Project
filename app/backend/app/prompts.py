@@ -141,6 +141,24 @@ Examples:
 """
 
 
+# The system/*.md rules were written for a Claude Code workflow that reads and
+# writes files. In the web app there is no file system: the app records
+# progress from the META block, so this overrides those file instructions.
+_WEB_CHAT_RULES = """
+## How this conversation works
+You are talking with the candidate in a live web chat. You have no file system.
+Where the guidance above says to read, write, or save files (for example
+`discovery.md` or anything under `candidates/`), do not do it and do not mention
+it; the app records progress from your metadata block.
+
+Everything you write, except the metadata block, appears to the candidate. So:
+- Write only what you would say to them directly, in plain conversational prose.
+- Never show file paths, file contents, templates, or your internal notes.
+- Do not use code blocks. Use a short list only when it helps them answer.
+- Ask one question per message.
+"""
+
+
 def build_system_prompt(session: Session) -> str:
     """Build the system prompt for Claude based on the current session phase."""
     files = _load_system_files()
@@ -299,6 +317,7 @@ def build_system_prompt(session: Session) -> str:
             f"```\n{session.job_description}\n```"
         )
 
+    parts.append(_WEB_CHAT_RULES)
     parts.append(_META_INSTRUCTIONS)
     return "\n\n".join(parts)
 
