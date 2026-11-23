@@ -34,6 +34,7 @@ async def generate_all_deliverables(session: Session, db) -> None:
     # Ensure discovery.md is current, then read it for richer prompt context
     write_discovery_md(session)
     discovery_md = read_discovery_md(session) or f"```json\n{discovery_json}\n```"
+    candidate_ctx = _candidate_context(session, discovery_md)
 
     # Get resume rules based on experience level
     if session.experience_level == "early_career":
@@ -53,8 +54,8 @@ async def generate_all_deliverables(session: Session, db) -> None:
 
     # --- Generate Resume ---
     resume_md = await _generate_with_claude(
-        system=f"You are a resume writer. Generate a complete resume in markdown.\n\n{rules}\n\n{output_formats}",
-        user_content=f"Generate the final resume based on this discovery data:\n\n{discovery_md}",
+        system=f"You are a resume writer. Generate a complete resume in markdown.\n\n{rules}\n\n{output_formats}\n\n{HEADER_RULE}",
+        user_content=f"Generate the final resume based on this discovery data:\n\n{candidate_ctx}",
     )
     resume_md_path = os.path.join(session_dir, f"{safe_name}_Resume_FINAL.md")
     _write_file(resume_md_path, resume_md)
@@ -70,7 +71,7 @@ async def generate_all_deliverables(session: Session, db) -> None:
     # --- Generate Interview Prep ---
     prep_md = await _generate_with_claude(
         system=f"You are an interview coach. Generate an interview prep guide.\n\n{output_formats}",
-        user_content=f"Generate interview prep based on this discovery data:\n\n{discovery_md}\n\nResume:\n{resume_md}",
+        user_content=f"Generate interview prep based on this discovery data:\n\n{candidate_ctx}\n\nResume:\n{resume_md}",
     )
     prep_md_path = os.path.join(session_dir, f"{safe_name}_Interview_Prep.md")
     _write_file(prep_md_path, prep_md)
@@ -80,7 +81,7 @@ async def generate_all_deliverables(session: Session, db) -> None:
     profile = files.get(f"profile_{session.profile_slug}", "") if session.profile_slug else ""
     matrix_html = await _generate_with_claude(
         system=f"Generate a skills matrix as a complete HTML file with embedded CSS.\n\n{output_formats}\n\nProfile:\n{profile}",
-        user_content=f"Generate the skills matrix based on:\n\n{discovery_md}",
+        user_content=f"Generate the skills matrix based on:\n\n{candidate_ctx}",
     )
     matrix_path = os.path.join(session_dir, f"{safe_name}_Skills_Matrix.html")
     _write_file(matrix_path, matrix_html)
@@ -100,6 +101,40 @@ async def generate_all_deliverables(session: Session, db) -> None:
     await db.commit()
 
 
+HEADER_RULE = (
+    "Header: use the candidate's name and contact details exactly as given. "
+    "If a detail is missing, leave it out. Never invent contact details or use "
+    "placeholders like [Phone] or email@example.com."
+)
+
+
+def _candidate_context(session, discovery_md: str) -> str:
+    """Discovery markdown plus contact details and the original resume, when present."""
+    data = session.discovery_data or {}
+    out = discovery_md or ""
+    contact = data.get("contact")
+    name = data.get("candidate_name")
+    if contact or name:
+        lines = ["", "", "## Contact Details (use exactly as given)"]
+        if name:
+            lines.append(f"- Name: {name}")
+        if isinstance(contact, dict):
+            for k, v in contact.items():
+                if v:
+                    lines.append(f"- {k.replace('_', ' ').title()}: {v}")
+        elif contact:
+            lines.append(f"- {contact}")
+        out += "\n".join(lines)
+    if session.resume_text:
+        out += (
+            "\n\n## Candidate's Original Resume (reference only)\n"
+            "Use it for facts, dates, employers and contact details the interview didn't cover; "
+            "where it conflicts with the interview answers, the interview wins.\n\n"
+            f"{session.resume_text}"
+        )
+    return out
+
+
 async def generate_targeted_deliverables(
     session, posting_company: str, posting_role: str, posting_text: str,
     include_cover_letter: bool, db
@@ -107,7 +142,7 @@ async def generate_targeted_deliverables(
     """Generate a targeted resume variant and optional cover letter for a specific job posting."""
     files = _load_system_files()
     write_discovery_md(session)
-    discovery_md = read_discovery_md(session) or ""
+    discovery_md = _candidate_context(session, read_discovery_md(session) or "")
 
     rules = files.get("system_resume_rules_early_career" if session.experience_level == "early_career" else "system_resume_rules", "")
     output_formats = files.get("system_output_formats", "")
@@ -137,6 +172,7 @@ async def generate_targeted_deliverables(
             f"- Weave keywords naturally — the summary must read like the candidate wrote it, not keyword stuffing\n"
             f"- Extract 10-15 key terms from the posting and use exact phrases where they fit naturally\n"
             f"- Flag any keywords the resume doesn't support with a comment: <!-- GAP: [keyword] -->\n"
+            f"- {HEADER_RULE}\n"
         ),
         user_content=(
             f"Job Posting — {posting_company} ({posting_role}):\n\n{posting_text}\n\n"
@@ -160,7 +196,7 @@ async def generate_targeted_deliverables(
     # Optional cover letter
     if include_cover_letter:
         cover_letter_md = await _generate_with_claude(
-            system=f"You are a cover letter writer.\n\n{output_formats}",
+            system=f"You are a cover letter writer.\n\n{output_formats}\n\n{HEADER_RULE}",
             user_content=(
                 f"Job Posting — {posting_company} ({posting_role}):\n\n{posting_text}\n\n"
                 f"Candidate Discovery Data:\n\n{discovery_md}\n\n"

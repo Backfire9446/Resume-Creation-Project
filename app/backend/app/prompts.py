@@ -124,6 +124,8 @@ def parse_session_updates(meta: dict) -> dict:
     return updates
 
 
+CONTACT_KEYS = ("candidate_name", "contact")
+
 _META_INSTRUCTIONS = """
 IMPORTANT — Phase transition and data capture protocol:
 When you complete a phase, detect the experience level, select a profile, or capture
@@ -157,6 +159,22 @@ Everything you write, except the metadata block, appears to the candidate. So:
 - Do not use code blocks. Use a short list only when it helps them answer.
 - Ask one question per message.
 """
+
+
+CONTACT_INSTRUCTION = (
+    "**CONTACT DETAILS FIRST (not a numbered question):**\n"
+    "Before the first discovery question, confirm the candidate's contact details as its own message: "
+    "full name as it should appear, city and state, phone, email, and LinkedIn or portfolio link. "
+    "If an uploaded resume exists (see 'Candidate's Existing Resume' below), pre-fill what it has and ask them to "
+    "confirm or correct it, e.g. \"Here's what I have from your resume: ... Is this still current? "
+    "Anything to add, like a LinkedIn link?\" If there is no resume, ask for these details directly. "
+    "Once they answer, save with "
+    '<!--META:{"discovery_update": {"candidate_name": "<name>", "contact": {"location": "...", '
+    '"phone": "...", "email": "...", "linkedin": "...", "other": "..."}}}--> '
+    "and leave out any field the candidate doesn't want listed. Never invent a value. "
+    "This does not count as one of the numbered discovery questions; "
+    "after saving it, continue with the first discovery question.\n"
+)
 
 
 def build_system_prompt(session: Session) -> str:
@@ -207,10 +225,14 @@ def build_system_prompt(session: Session) -> str:
     elif session.phase == 2:
         # Discovery interview
         total_questions = 9 if session.experience_level == "early_career" else 12
-        answered = len(session.discovery_data) if session.discovery_data else 0
+        answered = len(
+            [k for k in (session.discovery_data or {}) if k not in CONTACT_KEYS]
+        )
         current_q = min(answered + 1, total_questions)
 
         parts.append("\n## Your Task: Discovery Interview (Phase 2)\n")
+        if "contact" not in (session.discovery_data or {}):
+            parts.append(CONTACT_INSTRUCTION)
         resuming = answered > 0
         if resuming:
             parts.append(
