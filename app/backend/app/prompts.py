@@ -163,9 +163,10 @@ Everything you write, except the metadata block, appears to the candidate. So:
 
 CONTACT_INSTRUCTION = (
     "**CONTACT DETAILS FIRST (not a numbered question):**\n"
-    "Before the first discovery question, confirm the candidate's contact details as its own message: "
+    "Before the first discovery question, confirm the candidate's contact details as its own question "
+    "(during the initial review, it is the one question that ends your review message): "
     "full name as it should appear, city and state, phone, email, and LinkedIn or portfolio link. "
-    "If an uploaded resume exists (see 'Candidate's Existing Resume' below), pre-fill what it has and ask them to "
+    "If an uploaded resume exists (see 'Candidate's Existing Resume' in this prompt), pre-fill what it has and ask them to "
     "confirm or correct it, e.g. \"Here's what I have from your resume: ... Is this still current? "
     "Anything to add, like a LinkedIn link?\" If there is no resume, ask for these details directly. "
     "Once they answer, save with "
@@ -221,6 +222,15 @@ def build_system_prompt(session: Session) -> str:
                 "their background, detect experience level, and identify what needs improvement.\n\n"
                 f"```\n{session.resume_text}\n```"
             )
+        else:
+            # The app already offered an upload; the guidance above predates that.
+            parts.append(
+                "\n## No Resume Uploaded\n"
+                "The candidate chose to skip the resume upload. Do not ask them to paste "
+                "or upload one; build the resume from scratch through the interview."
+            )
+        if "contact" not in (session.discovery_data or {}):
+            parts.append(CONTACT_INSTRUCTION)
 
     elif session.phase == 2:
         # Discovery interview
