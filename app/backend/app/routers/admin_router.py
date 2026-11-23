@@ -8,7 +8,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
 from app.auth import hash_password, require_admin
-from app.claude_client import ClaudeRefusal, response_text, stream_message
+from app.claude_client import ClaudeRefusal, create_message, response_text
 from app.config import settings
 from app.database import get_db
 from app.models import Session, User
@@ -167,10 +167,13 @@ async def generate_profile(
     profile_text = ""
     for _ in range(MAX_ITERATIONS):
         try:
-            response = stream_message(
+            # Not streamed: the pinned SDK's stream accumulator drops server_tool_use
+            # inputs, and a pause_turn must be sent back unchanged. 16000 stays under
+            # the SDK's non-streaming limit.
+            response = create_message(
                 _claude,
                 effort="high",
-                max_tokens=32000,
+                max_tokens=16000,
                 system=system_prompt,
                 tools=[{"type": "web_search_20260209", "name": "web_search"}],
                 messages=messages,
