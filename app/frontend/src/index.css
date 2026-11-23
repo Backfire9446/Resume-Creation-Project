@@ -28,6 +28,15 @@
     padding: 0.1em 0.3em;
     border-radius: 4px;
   }
+  /* Code blocks wrap instead of pushing the page sideways on phones. */
+  .md pre {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    background: #EEF1F5;
+    padding: 0.75em 1em;
+    border-radius: 6px;
+  }
+  .md pre code { padding: 0; background: none; }
   .md-voice strong {
     font-weight: 600;
     background-image: linear-gradient(
