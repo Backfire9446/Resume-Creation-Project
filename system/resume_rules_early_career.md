@@ -41,7 +41,7 @@ Same as experienced — bold key details, consistent formatting, short bullets.
 The structure is different from experienced candidates. Education leads because it's the strongest credential.
 
 ### 1. Header
-- Name + Target Title (e.g., "JANE SMITH | Aspiring Financial Analyst" or "JANE SMITH | Junior NetSuite Administrator")
+- Name + Target Title (e.g., "JANE SMITH | Aspiring Registered Nurse" or "JANE SMITH | Junior Web Developer")
 - Using "Aspiring", "Junior", or "Entry-Level" is fine — it sets expectations honestly
 - Contact info (phone, email, LinkedIn)
 - Portfolio URL or GitHub (if relevant to the field)
@@ -53,7 +53,7 @@ The structure is different from experienced candidates. Education leads because 
 - Tone: enthusiastic and forward-looking, not "proven track record"
 
 **Example:**
-> Recent Accounting graduate from University of Houston with hands-on NetSuite experience through SuiteFoundation certification and a capstone project automating month-end close procedures for a simulated $5M company. Completed 3 relevant certifications while working part-time. Seeking an entry-level NetSuite Administrator role where I can grow into full-cycle ERP management.
+> Recent Marketing graduate from University of Houston with hands-on analytics experience through Google Analytics certification and a capstone project planning a campaign for a local nonprofit with a $5K budget. Completed 3 relevant certifications while working part-time. Seeking an entry-level Digital Marketing Coordinator role where I can grow into full-cycle campaign management.
 
 ### 3. Education
 This is the #1 section — not buried at the bottom.
@@ -65,11 +65,11 @@ This is the #1 section — not buried at the bottom.
 - **Capstone / Thesis** — if strong, give it its own bullet with description
 
 **Example:**
-> **B.S. Accounting** — University of Houston, May 2025 | GPA: 3.6 | Dean's List (4 semesters)
+> **B.S. Marketing** — University of Houston, May 2025 | GPA: 3.6 | Dean's List (4 semesters)
 >
-> Relevant Coursework: Financial Accounting, Managerial Accounting, Database Management, Business Analytics, ERP Systems
+> Relevant Coursework: Consumer Behavior, Marketing Analytics, Digital Media, Market Research, Business Statistics
 >
-> Capstone: Designed automated month-end close workflow for simulated $5M manufacturing company using NetSuite sandbox, reducing close time by 40% vs. manual process
+> Capstone: Designed email and social campaign for local nonprofit with $5K budget, increasing event registrations by 40% vs. prior year
 
 ### 4. Projects (If Strong Enough for Own Section)
 For candidates whose best proof points come from projects, not jobs:
@@ -93,7 +93,7 @@ For candidates whose best proof points come from projects, not jobs:
 
 ### 7. Activities & Leadership (Optional)
 - Include if it demonstrates leadership, initiative, or commitment
-- Must have specifics: "President of Accounting Club (45 members)" not just "Member of Accounting Club"
+- Must have specifics: "President of Marketing Club (45 members)" not just "Member of Marketing Club"
 - Cut if the resume is already 1 page without it
 
 ---
@@ -122,7 +122,7 @@ Built, Created, Designed, Developed, Analyzed, Researched, Configured, Implement
 
 | Red Flag | Example | Fix |
 |----------|---------|-----|
-| Participation without contribution | "Member of Accounting Club" | What did you do in the club? Or cut it |
+| Participation without contribution | "Member of Marketing Club" | What did you do in the club? Or cut it |
 | Duties without outcome | "Responsible for filing documents" | "Organized and digitized 500+ client files, reducing retrieval time" |
 | Vague skill claim | "Familiar with Excel" | "Excel (pivot tables, VLOOKUP, data validation) — used in 4 courses" |
 | Listing job duties from a description | "Answered phones and greeted customers" | "First point of contact for 50+ daily customer inquiries, maintaining 95%+ satisfaction score" |

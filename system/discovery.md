@@ -29,9 +29,9 @@ This answer shapes the entire resume angle.
 **Ask:** If a recruiter has 50 resumes on their desk for this role, what makes you different? What can you do that most other candidates can't?
 
 Push back if the answer is generic ("I'm a hard worker", "I'm detail-oriented"). Look for:
-- A rare combination of skills (e.g., "I'm a CPA who can also write SuiteScript")
-- A specific track record (e.g., "I've walked into 3 broken finance departments and fixed all of them")
-- A niche (e.g., "I specialize in QuickBooks-to-NetSuite migrations for manufacturing companies")
+- A rare combination of skills (e.g., "I'm a licensed electrician who can also program PLCs")
+- A specific track record (e.g., "I've walked into 3 struggling sales territories and grown all of them")
+- A niche (e.g., "I specialize in ERP migrations for manufacturing companies")
 
 ### 4. Hidden Achievements
 **Ask:** What accomplishments are NOT on your resume but you know you achieved? Think about: cost savings, error reductions, revenue impact, efficiency gains, team growth, process improvements.
