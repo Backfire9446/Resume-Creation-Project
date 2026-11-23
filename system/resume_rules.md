@@ -48,7 +48,7 @@ These are the standards every resume must meet. Apply these during Phase 3 (Resu
 This order is not a suggestion. Follow it exactly. The goal is to front-load proof so a recruiter sees value before they see lists.
 
 ### 1. Header
-- Name + Title/Credential on the same line (e.g., "JANE SMITH | Senior NetSuite Administrator (8x Certified)")
+- Name + Title/Credential on the same line (e.g., "JANE SMITH | Senior Registered Nurse (CCRN, BSN)")
 - The title must match the primary target role — this is the first thing a recruiter reads
 - Contact info (phone, email, LinkedIn)
 - Languages / Work authorization (if relevant)
@@ -61,7 +61,7 @@ This order is not a suggestion. Follow it exactly. The goal is to front-load pro
 - The summary should answer: "Who is this person, what scale do they operate at, and what's their biggest win?"
 
 **Example:**
-> 8x NetSuite-certified Administrator with 10+ years delivering ERP implementations, WMS deployments, and system optimization across manufacturing, distribution, and medical device operations. Career highlights: 4 successful ERP migrations, 3 WMS go-lives, 90%+ reduction in picking errors, and 30% faster system performance. Trained 100+ users and built 30+ SOPs to drive adoption and audit readiness.
+> Top-performing B2B Sales Director with 10+ years growing enterprise accounts across SaaS, logistics, and healthcare markets. Career highlights: 4 new-region launches, 3 product rollouts, 90%+ quota attainment, and 30% shorter sales cycles. Coached 100+ reps and built 30+ playbooks to drive adoption and repeatable pipeline.
 
 ### 3. Key Achievements (4-6 bullets) — MANDATORY
 This section is **required**. It is the hook that makes a recruiter want to keep reading. Without it, the recruiter has to dig through role-by-role bullets to figure out who the candidate is.
@@ -72,8 +72,8 @@ This section is **required**. It is the hook that makes a recruiter want to keep
 - Should answer: "If I only read 4 lines, what would I know about this person?"
 
 **Example format:**
-- **ERP Implementation:** Led NetSuite migration from QuickBooks/Fishbowl with zero major post-go-live issues for a $7M distribution company
-- **Cost Impact:** Delivered $100K+ in one-time savings through vendor analysis and process optimization
+- **Clinical Quality:** Led unit-wide fall-prevention protocol with zero patient falls in 12 months on a 32-bed med-surg unit
+- **Cost Impact:** Delivered $100K+ in one-time savings through supplier renegotiation and route optimization at a regional HVAC contractor
 - **Compliance & Risk:** Identified 4 missing state tax registrations across 2 employers, avoiding $125K+ in penalties
 
 ### 4. Professional Experience
@@ -123,12 +123,12 @@ Before presenting the draft, scan every bullet for these red flags. Any bullet t
 
 | Red Flag | Example | Fix |
 |----------|---------|-----|
-| No number | "Designed landed cost procedures" | Add the outcome: "...reducing margin calculation errors by X%" or cut |
-| Starts with "Started" / "Assisted" / "Helped" | "Started implementing fixed asset management" | What was the result? If none, cut it |
+| No number | "Designed patient education materials" | Add the outcome: "...reducing 30-day readmissions by X%" or cut |
+| Starts with "Started" / "Assisted" / "Helped" | "Started implementing a new scheduling system" | What was the result? If none, cut it |
 | Task-only (no outcome) | "Configured roles, permissions, and reports" | Add scope + impact: "Configured X roles and Y reports for Z clients, reducing support tickets by N%" |
 | Repeated across roles | Same achievement in two jobs | Keep in the stronger role, cut from the other |
-| Passive voice | "Was responsible for reconciliations" | "Reduced reconciliation time from X to Y days" |
-| Generic / could apply to anyone | "Managed financial operations" | What specifically? What scale? What changed? |
+| Passive voice | "Was responsible for monthly inventory counts" | "Reduced count time from X to Y days" |
+| Generic / could apply to anyone | "Managed daily operations" | What specifically? What scale? What changed? |
 
 ---
 
@@ -158,34 +158,34 @@ A resume that tries to target 5 roles targets none of them.
 ## Bullet Transformation Examples
 
 ### Before (Task-Focused)
-> Responsible for bank reconciliations and financial reporting
+> Responsible for patient discharge paperwork and family education
 
 ### After (Results-Focused)
-> Reduced month-end close from **12 days to 5 days** through automated bank reconciliation workflows and streamlined financial reporting
+> Reduced average discharge time from **4 hours to 2.5 hours** through standardized discharge checklists and earlier family education on a 32-bed unit
 
 ---
 
 ### Before (No Numbers)
-> Managed integrations between NetSuite and external platforms
+> Managed integrations between the company web platform and external services
 
 ### After (Quantified)
-> Managed **6** platform integrations (Avalara, Stripe, Shopify, Celigo, Pacejet, Envoy B2B) processing **500-1,000** transactions monthly with **<1%** sync failure rate
+> Managed **6** API integrations (Stripe, Twilio, SendGrid, Salesforce, Zendesk, Slack) processing **500-1,000** requests per minute with **<1%** failure rate
 
 ---
 
 ### Before (Weak Percentages)
-> Reduced stockouts by 2% and assembly delays by 3%
+> Reduced callbacks by 2% and scheduling delays by 3%
 
 ### After (Positive Framing)
-> Configured assembly workflows achieving **98%** inventory availability and **97%** on-time assembly completion during post-COVID supply chain disruptions
+> Redesigned dispatch scheduling achieving **98%** first-visit fix rate and **97%** on-time arrival across a 40-technician HVAC fleet during peak summer demand
 
 ---
 
 ### Before (Weak Verb)
-> Started implementing fixed asset management processes
+> Started implementing a volunteer tracking program
 
 ### After (Outcome-Focused)
-> Implemented fixed asset tracking for **$2M** in company assets, establishing depreciation schedules and reducing year-end audit prep by **40 hours**
+> Implemented volunteer tracking for **250** active volunteers, establishing shift schedules and reducing event staffing prep by **40 hours** per quarter
 
 *If you don't have the outcome data, cut the bullet entirely.*
 
